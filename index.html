@@ -22,9 +22,13 @@
         
         <div class="match-card">
             <p><strong>Torneo:</strong> Trisport Corridonia</p>
-            <p><strong>Squadra A vs Squadra B</strong></p>
             
-            <label for="sport-type">Seleziona lo sport:</label>
+            <label for="select-partita" style="color: #0056b3; font-weight: bold;">Seleziona la Sfida:</label>
+            <select id="select-partita" style="border: 2px solid #0056b3; background-color: #f0f8ff;">
+                <option value="">Caricamento partite...</option>
+            </select>
+            
+            <label for="sport-type" style="margin-top: 15px; display: block;">Seleziona lo sport:</label>
             <select id="sport-type" onchange="cambiaCampiSport()">
                 <option value="calcio">Calcio a 5</option>
                 <option value="pallavolo">Pallavolo</option>
@@ -70,7 +74,6 @@
 
             <button class="btn-salva" onclick="salvaRisultato()">Salva Risultato</button>
         </div>
-    </div>
 
     <script type="module" src="script.js"></script>
 </body>

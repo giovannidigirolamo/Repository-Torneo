@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Trisport Corridonia</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="max-width: 600px;">
+        <h1>Dashboard Super Admin</h1>
+        <a href="index.html" style="font-size: 14px;">Torna all'Area Arbitri</a>
+
+        <div class="match-card" style="margin-top: 20px;">
+            <h3>1. Gestione Squadre</h3>
+            <input type="text" id="new-team-name" placeholder="Nome nuova squadra">
+            <button onclick="aggiungiSquadra()">Aggiungi Squadra</button>
+            <ul id="teams-list" style="margin-top:10px; font-size: 14px; list-style: none; padding:0;"></ul>
+        </div>
+
+        <div class="match-card" style="margin-top: 20px;">
+            <h3>2. Crea Accoppiamento Serata</h3>
+            <label>Data della sfida:</label>
+            <input type="date" id="match-date">
+            
+            <label>Squadra A:</label>
+            <select id="select-team-a"></select>
+
+            <label>Squadra B:</label>
+            <select id="select-team-b"></select>
+
+            <button class="btn-salva" onclick="creaAccoppiamento()">Crea Sfida Serata</button>
+        </div>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

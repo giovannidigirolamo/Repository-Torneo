@@ -10,51 +10,64 @@ const firebaseConfig = {
   appId: "INCOLLA_QUI_IL_TUO_APP_ID"
 };
 
+console.log("Inizializzazione Firebase...");
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// --- FUNZIONE PER AGGIUNGERE UNA SQUADRA ---
 window.aggiungiSquadra = async function() {
     const nome = document.getElementById('new-team-name').value;
     if (!nome) return alert("Inserisci un nome!");
 
+    console.log("Tentativo di aggiunta squadra:", nome);
     try {
         await addDoc(collection(db, "squadre"), { nome: nome });
+        console.log("Squadra salvata con successo!");
         document.getElementById('new-team-name').value = "";
-        caricaSquadre(); // Aggiorna la lista
-        alert("Squadra aggiunta!");
-    } catch (e) { console.error(e); }
+        caricaSquadre();
+        alert("Squadra aggiunta correttamente!");
+    } catch (e) { 
+        console.error("ERRORE DURANTE IL SALVATAGGIO:", e);
+        alert("Errore: controlla le regole di Firebase o la console.");
+    }
 }
 
-// --- FUNZIONE PER CARICARE LE SQUADRE NEI MENU A TENDINA ---
 async function caricaSquadre() {
-    const querySnapshot = await getDocs(query(collection(db, "squadre"), orderBy("nome")));
-    const listHtml = document.getElementById('teams-list');
-    const selectA = document.getElementById('select-team-a');
-    const selectB = document.getElementById('select-team-b');
+    console.log("Caricamento lista squadre...");
+    try {
+        const querySnapshot = await getDocs(query(collection(db, "squadre"), orderBy("nome")));
+        const listHtml = document.getElementById('teams-list');
+        const selectA = document.getElementById('select-team-a');
+        const selectB = document.getElementById('select-team-b');
 
-    listHtml.innerHTML = "";
-    selectA.innerHTML = "";
-    selectB.innerHTML = "";
+        listHtml.innerHTML = "";
+        selectA.innerHTML = "";
+        selectB.innerHTML = "";
 
-    querySnapshot.forEach((doc) => {
-        const squadra = doc.data().nome;
-        // Aggiunge alla lista visiva
-        listHtml.innerHTML += `<li>• ${squadra}</li>`;
-        // Aggiunge ai menu a tendina
-        const option = `<option value="${squadra}">${squadra}</option>`;
-        selectA.innerHTML += option;
-        selectB.innerHTML += option;
-    });
+        if (querySnapshot.empty) {
+            console.log("Nessuna squadra trovata nel database.");
+            listHtml.innerHTML = "<li>Nessuna squadra presente.</li>";
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const squadra = doc.data().nome;
+            listHtml.innerHTML += `<li>• ${squadra}</li>`;
+            const option = `<option value="${squadra}">${squadra}</option>`;
+            selectA.innerHTML += option;
+            selectB.innerHTML += option;
+        });
+        console.log("Squadre caricate correttamente.");
+    } catch (e) {
+        console.error("ERRORE DURANTE IL CARICAMENTO:", e);
+    }
 }
 
-// --- FUNZIONE PER CREARE L'ACCOPPIAMENTO ---
 window.creaAccoppiamento = async function() {
     const data = document.getElementById('match-date').value;
     const sqA = document.getElementById('select-team-a').value;
     const sqB = document.getElementById('select-team-b').value;
 
-    if (!data || sqA === sqB) return alert("Controlla la data e assicurati che le squadre siano diverse!");
+    if (!data || sqA === sqB) return alert("Dati non validi o squadre identiche!");
 
     try {
         await addDoc(collection(db, "calendario"), {
@@ -63,9 +76,8 @@ window.creaAccoppiamento = async function() {
             squadraB: sqB,
             creatoIl: new Date()
         });
-        alert(`Sfida ${sqA} vs ${sqB} creata per il giorno ${data}`);
+        alert(`Sfida creata!`);
     } catch (e) { console.error(e); }
 }
 
-// Avvia il caricamento iniziale
 caricaSquadre();

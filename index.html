@@ -21,36 +21,50 @@
         <h2>Le tue Partite</h2>
         
         <div class="match-card">
-            <p><strong>Torneo:</strong> Coppa Invernale 2026</p>
+            <p><strong>Torneo:</strong> Trisport Corridonia</p>
             <p><strong>Squadra A vs Squadra B</strong></p>
             
-            <label for="sport-type">Seleziona lo sport per inserire i dati:</label>
+            <label for="sport-type">Seleziona lo sport:</label>
             <select id="sport-type" onchange="cambiaCampiSport()">
-                <option value="calcio">Calcio / Futsal</option>
+                <option value="calcio">Calcio a 5</option>
                 <option value="pallavolo">Pallavolo</option>
+                <option value="basket">Basket</option>
+                <option value="jolly">Gioco Jolly</option>
             </select>
 
-            <!-- Campi Calcio -->
-            <div id="campi-calcio" class="score-section">
+            <div id="campi-punti" class="score-section">
                 <div class="team-score">
-                    <label>Gol Squadra A</label>
-                    <input type="number" min="0" placeholder="0">
+                    <label>Gol/Punti Sq. A</label>
+                    <input type="number" id="punti-a" min="0" placeholder="0">
                 </div>
                 <div class="team-score">
-                    <label>Gol Squadra B</label>
-                    <input type="number" min="0" placeholder="0">
+                    <label>Gol/Punti Sq. B</label>
+                    <input type="number" id="punti-b" min="0" placeholder="0">
                 </div>
             </div>
 
-            <!-- Campi Pallavolo -->
             <div id="campi-pallavolo" class="score-section hidden">
                 <div class="team-score">
                     <label>Set Vinti Sq. A</label>
-                    <input type="number" min="0" max="3" placeholder="0">
+                    <input type="number" id="set-a" min="0" max="3" placeholder="0">
                 </div>
                 <div class="team-score">
                     <label>Set Vinti Sq. B</label>
-                    <input type="number" min="0" max="3" placeholder="0">
+                    <input type="number" id="set-b" min="0" max="3" placeholder="0">
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; background: #eef; padding: 15px; border-radius: 8px; text-align: left;">
+                <label style="font-weight: bold; font-size: 14px; cursor: pointer;">
+                    <input type="checkbox" id="check-spareggio" onchange="toggleSpareggio()"> 
+                    Partita decisa dopo pareggio/tie-break?
+                </label>
+                <div id="scelta-vincitore" class="hidden" style="margin-top: 10px;">
+                    <label style="font-size: 14px;">Chi ha vinto lo spareggio?</label>
+                    <select id="vincitore-spareggio">
+                        <option value="A">Squadra A</option>
+                        <option value="B">Squadra B</option>
+                    </select>
                 </div>
             </div>
 

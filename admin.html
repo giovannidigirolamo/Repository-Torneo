@@ -13,6 +13,7 @@
 
         <div class="match-card" style="margin-top: 20px;">
             <h3>1. Gestione Squadre</h3>
+            <label for="new-team-name" style="display:none;">Nome squadra</label>
             <input type="text" id="new-team-name" placeholder="Nome nuova squadra">
             <button onclick="aggiungiSquadra()">Aggiungi Squadra</button>
             <ul id="teams-list" style="margin-top:10px; font-size: 14px; list-style: none; padding:0;"></ul>
@@ -20,13 +21,13 @@
 
         <div class="match-card" style="margin-top: 20px;">
             <h3>2. Crea Accoppiamento Serata</h3>
-            <label>Data della sfida:</label>
+            <label for="match-date">Data della sfida:</label>
             <input type="date" id="match-date">
             
-            <label>Squadra A:</label>
+            <label for="select-team-a">Squadra A:</label>
             <select id="select-team-a"></select>
 
-            <label>Squadra B:</label>
+            <label for="select-team-b">Squadra B:</label>
             <select id="select-team-b"></select>
 
             <button class="btn-salva" onclick="creaAccoppiamento()">Crea Sfida Serata</button>

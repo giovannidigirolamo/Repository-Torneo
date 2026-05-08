@@ -1,9 +1,8 @@
 // Importiamo le funzioni base di Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-// QUI È DOVE DEVI INCOLLARE LE TUE CHIAVI FIREBASE!
-// Sostituisci i testi tra virgolette con i tuoi codici esatti
+// INCOLLA LE TUE CHIAVI FIREBASE QUI
 const firebaseConfig = {
   apiKey: "AIzaSyAnYEtwrhmjT3aJY4dk_vST32cOX-kPe_M",
   authDomain: "torneo-trisport-corridonia.firebaseapp.com",
@@ -12,23 +11,46 @@ const firebaseConfig = {
   messagingSenderId: "330248876134",
   appId: "1:330248876134:web:f8814eda23c8da91063da7"
 };
-
-// Inizializziamo Firebase e il Database
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Funzione di Login
+// CARICA IL CALENDARIO DA FIREBASE
+async function caricaPartite() {
+    const selectPartita = document.getElementById('select-partita');
+    selectPartita.innerHTML = "<option value=''>Scegli la partita...</option>";
+    
+    try {
+        // Peschiamo gli accoppiamenti dal database ordinati per data
+        const q = query(collection(db, "calendario"), orderBy("data", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const testoPartita = `${data.squadraA} vs ${data.squadraB} (${data.data})`;
+            // Salviamo i nomi delle squadre dentro il "value" divisi da un trattino verticale
+            const valorePartita = `${data.squadraA}|${data.squadraB}`; 
+            
+            selectPartita.innerHTML += `<option value="${valorePartita}">${testoPartita}</option>`;
+        });
+    } catch (e) {
+        console.error("Errore nel caricamento del calendario:", e);
+        selectPartita.innerHTML = "<option value=''>Errore caricamento</option>";
+    }
+}
+
+// LOGIN
 window.login = function() {
     const code = document.getElementById('referee-code').value;
     if (code !== "") {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('dashboard-screen').classList.remove('hidden');
+        // Appena entra, carica automaticamente le partite dal database!
+        caricaPartite(); 
     } else {
         alert("Inserisci un codice valido per accedere.");
     }
 }
 
-// Cambia i campi visibili in base allo sport
 window.cambiaCampiSport = function() {
     const sportScelto = document.getElementById('sport-type').value;
     const campiPunti = document.getElementById('campi-punti');
@@ -43,7 +65,6 @@ window.cambiaCampiSport = function() {
     }
 }
 
-// Mostra/Nascondi il menu a tendina se l'arbitro spunta la casella del pareggio
 window.toggleSpareggio = function() {
     const isChecked = document.getElementById('check-spareggio').checked;
     const scelta = document.getElementById('scelta-vincitore');
@@ -54,33 +75,35 @@ window.toggleSpareggio = function() {
     }
 }
 
-// SALVATAGGIO E CALCOLO PUNTI TORNEO
+// SALVATAGGIO
 window.salvaRisultato = async function() {
+    const partitaSelezionata = document.getElementById('select-partita').value;
     const sportScelto = document.getElementById('sport-type').value;
     const arbitro = document.getElementById('referee-code').value;
     const isSpareggio = document.getElementById('check-spareggio').checked;
+
+    if (!partitaSelezionata) {
+        return alert("Devi prima selezionare la sfida dal menu in alto!");
+    }
+
+    // Dividiamo il testo per ottenere esattamente "NomeSquadraA" e "NomeSquadraB"
+    const squadre = partitaSelezionata.split('|');
+    const nomeSqA = squadre[0];
+    const nomeSqB = squadre[1];
     
-    // Leggiamo i punteggi grezzi inseriti dall'arbitro
     let punteggioGrezzoA = sportScelto === 'pallavolo' ? parseInt(document.getElementById('set-a').value) : parseInt(document.getElementById('punti-a').value);
     let punteggioGrezzoB = sportScelto === 'pallavolo' ? parseInt(document.getElementById('set-b').value) : parseInt(document.getElementById('punti-b').value);
 
-    // Controllo sicurezza: campi vuoti
-    if (isNaN(punteggioGrezzoA) || isNaN(punteggioGrezzoB)) {
-        alert("Inserisci i punteggi prima di salvare!");
-        return;
-    }
+    if (isNaN(punteggioGrezzoA) || isNaN(punteggioGrezzoB)) return alert("Inserisci i punteggi prima di salvare!");
 
-    // Variabili per i Punti Classifica Generali
     let puntiTorneoA = 0;
     let puntiTorneoB = 0;
     
-    // Regole di punteggio base
     const puntiVittoriaNetta = (sportScelto === 'jolly') ? 4 : 3;
     const puntiVittoriaSpareggio = (sportScelto === 'jolly') ? 3 : 2;
     const puntiSconfittaSpareggio = 1;
 
     if (isSpareggio) {
-        // Se c'è stato uno spareggio, leggiamo chi ha vinto dal menu a tendina
         const vincitoreSpareggio = document.getElementById('vincitore-spareggio').value;
         if (vincitoreSpareggio === "A") {
             puntiTorneoA = puntiVittoriaSpareggio;
@@ -90,7 +113,6 @@ window.salvaRisultato = async function() {
             puntiTorneoB = puntiVittoriaSpareggio;
         }
     } else {
-        // Se non c'è stato spareggio, chi ha il numero più alto vince netto
         if (punteggioGrezzoA > punteggioGrezzoB) {
             puntiTorneoA = puntiVittoriaNetta;
             puntiTorneoB = 0;
@@ -98,36 +120,34 @@ window.salvaRisultato = async function() {
             puntiTorneoA = 0;
             puntiTorneoB = puntiVittoriaNetta;
         } else {
-            alert("Hai inserito un pareggio! Spunta la casella 'Partita decisa dopo pareggio' e indica chi ha vinto.");
-            return; // Blocca il salvataggio
+            return alert("Hai inserito un pareggio! Spunta la casella 'Partita decisa dopo pareggio'.");
         }
     }
 
-    // Prepariamo il "pacco" di dati da spedire a Firebase
     let datiPartita = {
         torneo: "Trisport Corridonia",
-        squadraA: "Squadra A",
-        squadraB: "Squadra B",
+        squadraA: nomeSqA,  // Ora salva il NOME REALE!
+        squadraB: nomeSqB,  // Ora salva il NOME REALE!
         sport: sportScelto,
         codiceArbitro: arbitro,
         punteggioFinaleA: punteggioGrezzoA,
         punteggioFinaleB: punteggioGrezzoB,
-        puntiTorneoGuadagnatiA: puntiTorneoA, // 3, 2, 1, 0, o 4
+        puntiTorneoGuadagnatiA: puntiTorneoA,
         puntiTorneoGuadagnatiB: puntiTorneoB,
         vintaDopoPareggio: isSpareggio,
         dataInserimento: new Date()
     };
 
     try {
-        const docRef = await addDoc(collection(db, "risultati"), datiPartita);
-        alert(`Salvato! La Squadra A prende ${puntiTorneoA} pt e la Squadra B prende ${puntiTorneoB} pt.`);
+        await addDoc(collection(db, "risultati"), datiPartita);
+        alert(`Salvato! ${nomeSqA} guadagna ${puntiTorneoA} pt, ${nomeSqB} guadagna ${puntiTorneoB} pt.`);
         
-        // Reset dei campi per la partita successiva
         document.querySelectorAll('input[type="number"]').forEach(i => i.value = '');
+        document.getElementById('select-partita').value = '';
         document.getElementById('check-spareggio').checked = false;
         toggleSpareggio();
     } catch (e) {
         console.error("Errore: ", e);
-        alert("C'è stato un problema col salvataggio.");
+        alert("Problema col salvataggio.");
     }
 }

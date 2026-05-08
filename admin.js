@@ -3,12 +3,12 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https
 
 // INCOLLA QUI I TUOI DATI REALI DI FIREBASE
 const firebaseConfig = {
-  apiKey: "INCOLLA_QUI_LA_TUA_API_KEY",
-  authDomain: "INCOLLA_QUI_IL_TUO_AUTH_DOMAIN",
-  projectId: "INCOLLA_QUI_IL_TUO_PROJECT_ID",
-  storageBucket: "INCOLLA_QUI_IL_TUO_STORAGE_BUCKET",
-  messagingSenderId: "INCOLLA_QUI_IL_TUO_MESSAGING_SENDER_ID",
-  appId: "INCOLLA_QUI_IL_TUO_APP_ID"
+  apiKey: "AIzaSyAnYEtwrhmjT3aJY4dk_vST32cOX-kPe_M",
+  authDomain: "torneo-trisport-corridonia.firebaseapp.com",
+  projectId: "torneo-trisport-corridonia",
+  storageBucket: "torneo-trisport-corridonia.firebasestorage.app",
+  messagingSenderId: "330248876134",
+  appId: "1:330248876134:web:f8814eda23c8da91063da7"
 };
 
 const app = initializeApp(firebaseConfig);

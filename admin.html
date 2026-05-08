@@ -3,37 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Trisport Corridonia</title>
+    <title>SuperAdmin - Trisport</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container" style="max-width: 600px;">
-        <h1>Dashboard Super Admin</h1>
-        <a href="index.html" style="font-size: 14px;">Torna all'Area Arbitri</a>
-
-        <div class="match-card" style="margin-top: 20px;">
-            <h3>1. Gestione Squadre</h3>
-            <label for="new-team-name" style="display:none;">Nome squadra</label>
-            <input type="text" id="new-team-name" placeholder="Nome nuova squadra">
-            <button onclick="aggiungiSquadra()">Aggiungi Squadra</button>
-            <ul id="teams-list" style="margin-top:10px; font-size: 14px; list-style: none; padding:0;"></ul>
-        </div>
-
-        <div class="match-card" style="margin-top: 20px;">
-            <h3>2. Crea Accoppiamento Serata</h3>
-            <label for="match-date">Data della sfida:</label>
-            <input type="date" id="match-date">
-            
-            <label for="select-team-a">Squadra A:</label>
-            <select id="select-team-a"></select>
-
-            <label for="select-team-b">Squadra B:</label>
-            <select id="select-team-b"></select>
-
-            <button class="btn-salva" onclick="creaAccoppiamento()">Crea Sfida Serata</button>
-        </div>
+    <div id="admin-login" class="container">
+        <h1>Accesso Riservato</h1>
+        <input type="password" id="admin-pass" placeholder="Password Admin (trisport2026)">
+        <button onclick="checkAdminLogin()">Entra</button>
     </div>
 
+    <div id="admin-dashboard" class="container hidden">
+        <h1>Centrale Operativa</h1>
+        <div class="tab-menu">
+            <button onclick="showTab('tab-classifica')" class="active">Classifiche</button>
+            <button onclick="showTab('tab-risultati')">Risultati</button>
+            <button onclick="showTab('tab-squadre')">Squadre</button>
+            <button onclick="showTab('tab-calendario')">Calendario</button>
+            <button onclick="showTab('tab-arbitri')">Arbitri</button>
+        </div>
+
+        <div id="tab-classifica" class="admin-section" style="display: block;">
+            <h3>Classifiche</h3>
+            <select id="filter-torneo" onchange="calcolaClassifica()">
+                <option value="Senior">Torneo Senior</option>
+                <option value="Junior">Torneo Junior</option>
+            </select>
+            <div id="classifica-container"></div>
+        </div>
+
+        <div id="tab-risultati" class="admin-section">
+            <h3>Tutti i Punteggi</h3>
+            <div id="lista-risultati" style="overflow-x: auto;"></div>
+        </div>
+
+        <div id="tab-squadre" class="admin-section match-card">
+            <h3>Aggiungi Squadra</h3>
+            <input type="text" id="new-team-name" placeholder="Nome Squadra">
+            <select id="new-team-torneo"><option value="Senior">Torneo Senior</option><option value="Junior">Torneo Junior</option></select>
+            <select id="new-team-group"><option value="Girone Unico">Girone Unico</option><option value="Girone A">Girone A</option><option value="Girone B">Girone B</option></select>
+            <button onclick="aggiungiSquadra()">Salva Squadra</button>
+            <h4>Squadre Iscritte:</h4>
+            <ul id="teams-list" style="text-align: left; font-size: 14px;"></ul>
+        </div>
+
+        <div id="tab-calendario" class="admin-section match-card">
+            <h3>Crea Sfida Serata</h3>
+            <select id="match-torneo" onchange="filtraSquadreCalendario()"><option value="Senior">Torneo Senior</option><option value="Junior">Torneo Junior</option></select>
+            <input type="date" id="match-date">
+            <select id="select-team-a"><option>Scegli Torneo prima</option></select>
+            <select id="select-team-b"><option>Scegli Torneo prima</option></select>
+            <button onclick="creaAccoppiamento()">Crea Accoppiamento</button>
+        </div>
+
+        <div id="tab-arbitri" class="admin-section match-card">
+            <h3>Crea Arbitro</h3>
+            <input type="text" id="ref-name" placeholder="Nome Arbitro">
+            <input type="text" id="ref-code" placeholder="Codice Segreto Es. MARIO-123">
+            <select id="ref-sport"><option value="calcio">Calcio</option><option value="pallavolo">Pallavolo</option><option value="basket">Basket</option><option value="jolly">Jolly</option></select>
+            <button onclick="aggiungiArbitro()">Salva Arbitro</button>
+        </div>
+    </div>
     <script type="module" src="admin.js"></script>
 </body>
 </html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Tornei - Area Arbitri</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SCHERMATA DI LOGIN -->
+    <div id="login-screen" class="container">
+        <h1>Area Arbitri</h1>
+        <p>Inserisci il tuo codice di accesso</p>
+        <input type="text" id="referee-code" placeholder="Codice Arbitro">
+        <button onclick="login()">Accedi</button>
+    </div>
+
+    <!-- SCHERMATA INSERIMENTO PUNTEGGI (Inizialmente Nascosta) -->
+    <div id="dashboard-screen" class="container hidden">
+        <h2>Le tue Partite</h2>
+        
+        <div class="match-card">
+            <p><strong>Torneo:</strong> Coppa Invernale 2026</p>
+            <p><strong>Squadra A vs Squadra B</strong></p>
+            
+            <label for="sport-type">Seleziona lo sport per inserire i dati:</label>
+            <select id="sport-type" onchange="cambiaCampiSport()">
+                <option value="calcio">Calcio / Futsal</option>
+                <option value="pallavolo">Pallavolo</option>
+            </select>
+
+            <!-- Campi Calcio -->
+            <div id="campi-calcio" class="score-section">
+                <div class="team-score">
+                    <label>Gol Squadra A</label>
+                    <input type="number" min="0" placeholder="0">
+                </div>
+                <div class="team-score">
+                    <label>Gol Squadra B</label>
+                    <input type="number" min="0" placeholder="0">
+                </div>
+            </div>
+
+            <!-- Campi Pallavolo -->
+            <div id="campi-pallavolo" class="score-section hidden">
+                <div class="team-score">
+                    <label>Set Vinti Sq. A</label>
+                    <input type="number" min="0" max="3" placeholder="0">
+                </div>
+                <div class="team-score">
+                    <label>Set Vinti Sq. B</label>
+                    <input type="number" min="0" max="3" placeholder="0">
+                </div>
+            </div>
+
+            <button class="btn-salva" onclick="salvaRisultato()">Salva Risultato</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Tornei - Area Arbitri</title>
+    <title>Area Arbitri - Trisport</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- SCHERMATA DI LOGIN -->
-    <div id="login-screen" class="container">
+    <div id="login-screen" class="container" style="max-width: 400px;">
         <h1>Area Arbitri</h1>
         <p>Inserisci il tuo codice di accesso</p>
-        <input type="text" id="referee-code" placeholder="Codice Arbitro">
+        <input type="text" id="referee-code" placeholder="Es. MARIO-BASKET">
         <button onclick="login()">Accedi</button>
     </div>
 
-    <!-- SCHERMATA INSERIMENTO PUNTEGGI (Inizialmente Nascosta) -->
-    <div id="dashboard-screen" class="container hidden">
+    <div id="dashboard-screen" class="container hidden" style="max-width: 400px;">
         <h2>Le tue Partite</h2>
-        
         <div class="match-card">
-            <p><strong>Torneo:</strong> Trisport Corridonia</p>
-            
-            <label for="select-partita" style="color: #0056b3; font-weight: bold;">Seleziona la Sfida:</label>
+            <label style="color: #0056b3; font-weight: bold;">Seleziona la Sfida:</label>
             <select id="select-partita" style="border: 2px solid #0056b3; background-color: #f0f8ff;">
                 <option value="">Caricamento partite...</option>
             </select>
             
-            <label for="sport-type" style="margin-top: 15px; display: block;">Seleziona lo sport:</label>
-            <select id="sport-type" onchange="cambiaCampiSport()">
+            <label style="margin-top: 15px; display: block;">Sport Assegnato:</label>
+            <select id="sport-type" disabled>
                 <option value="calcio">Calcio a 5</option>
                 <option value="pallavolo">Pallavolo</option>
                 <option value="basket">Basket</option>
@@ -37,31 +31,18 @@
             </select>
 
             <div id="campi-punti" class="score-section">
-                <div class="team-score">
-                    <label>Gol/Punti Sq. A</label>
-                    <input type="number" id="punti-a" min="0" placeholder="0">
-                </div>
-                <div class="team-score">
-                    <label>Gol/Punti Sq. B</label>
-                    <input type="number" id="punti-b" min="0" placeholder="0">
-                </div>
+                <div class="team-score"><label>Punti Sq. A</label><input type="number" id="punti-a" min="0"></div>
+                <div class="team-score"><label>Punti Sq. B</label><input type="number" id="punti-b" min="0"></div>
             </div>
 
             <div id="campi-pallavolo" class="score-section hidden">
-                <div class="team-score">
-                    <label>Set Vinti Sq. A</label>
-                    <input type="number" id="set-a" min="0" max="3" placeholder="0">
-                </div>
-                <div class="team-score">
-                    <label>Set Vinti Sq. B</label>
-                    <input type="number" id="set-b" min="0" max="3" placeholder="0">
-                </div>
+                <div class="team-score"><label>Set Sq. A</label><input type="number" id="set-a" min="0" max="3"></div>
+                <div class="team-score"><label>Set Sq. B</label><input type="number" id="set-b" min="0" max="3"></div>
             </div>
 
-            <div style="margin-top: 20px; background: #eef; padding: 15px; border-radius: 8px; text-align: left;">
+            <div style="margin-top: 20px; background: #eef; padding: 15px; border-radius: 8px;">
                 <label style="font-weight: bold; font-size: 14px; cursor: pointer;">
-                    <input type="checkbox" id="check-spareggio" onchange="toggleSpareggio()"> 
-                    Partita decisa dopo pareggio/tie-break?
+                    <input type="checkbox" id="check-spareggio" onchange="toggleSpareggio()"> Partita decisa dopo pareggio/tie-break?
                 </label>
                 <div id="scelta-vincitore" class="hidden" style="margin-top: 10px;">
                     <label style="font-size: 14px;">Chi ha vinto lo spareggio?</label>
@@ -71,10 +52,9 @@
                     </select>
                 </div>
             </div>
-
-            <button class="btn-salva" onclick="salvaRisultato()">Salva Risultato</button>
+            <button class="btn-salva" onclick="salvaRisultato()" style="margin-top: 20px;">Salva Risultato</button>
         </div>
-
+    </div>
     <script type="module" src="script.js"></script>
 </body>
 </html>

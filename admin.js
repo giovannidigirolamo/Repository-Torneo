@@ -6,7 +6,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 window.checkAdminLogin = function() {
-    if(document.getElementById('admin-pass').value === "trisport2026") {
+    if(document.getElementById('admin-pass').value === "Colorare23,") {
         document.getElementById('admin-login').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
         caricaDatiIniziali();

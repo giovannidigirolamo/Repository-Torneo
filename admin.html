@@ -44,23 +44,22 @@
             </div>
         </div>
 
-        <!-- MODIFICA SEZIONE SQUADRE (Girone Dinamico) -->
-        <div id="tab-squadre" class="admin-section">
-            <div class="match-card">
-                <h3>Aggiungi Squadra</h3>
-                <input type="text" id="new-team-name" placeholder="Nome Squadra">
-                <label>Torneo:</label>
-                <select id="new-team-torneo" class="select-tornei-dinamica" onchange="caricaGironiPerSquadra()"></select>
-                <label>Girone:</label>
-                <select id="new-team-group" id="select-gironi-dinamica">
-                    <option value="">Seleziona prima il torneo...</option>
-                </select>
-                <button onclick="aggiungiSquadra()">Salva Squadra</button>
-                <h4>Squadre Iscritte:</h4>
-                <div id="teams-list-pro"></div>
-            </div>
-        </div>
-
+        <!-- SEZIONE SQUADRE AGGIORNATA -->
+<div id="tab-squadre" class="admin-section">
+    <div class="match-card">
+        <h3>Aggiungi Squadra</h3>
+        <input type="text" id="new-team-name" placeholder="Nome Squadra">
+        <label>Torneo:</label>
+        <select id="new-team-torneo" class="select-tornei-dinamica" onchange="caricaGironiPerSquadra()"></select>
+        <label>Girone:</label>
+        <select id="new-team-group"> <!-- ID Corretto qui -->
+            <option value="">Seleziona prima il torneo...</option>
+        </select>
+        <button onclick="aggiungiSquadra()">Salva Squadra</button>
+        <h4>Squadre Iscritte:</h4>
+        <div id="teams-list-pro"></div>
+    </div>
+</div>
         
         <div id="tab-tornei" class="admin-section">
             <div class="match-card">

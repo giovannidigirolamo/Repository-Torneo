@@ -42,10 +42,16 @@ function caricaDatiIniziali() {
 // --- GESTIONE TORNEI ---
 window.aggiungiTorneo = async function() {
     const nome = document.getElementById('new-tournament-name').value;
-    if(!nome) return;
-    await addDoc(collection(db, "tornei"), { nome });
-    document.getElementById('new-tournament-name').value = "";
-    caricaTornei();
+    if(!nome) return alert("Inserisci un nome per il torneo!");
+    try {
+        await addDoc(collection(db, "tornei"), { nome });
+        alert("Torneo '" + nome + "' creato con successo!"); // Feedback aggiunto
+        document.getElementById('new-tournament-name').value = "";
+        caricaTornei();
+    } catch (e) {
+        console.error("Errore: ", e);
+        alert("Errore durante la creazione: " + e.message);
+    }
 }
 
 async function caricaTornei() {

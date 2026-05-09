@@ -3,67 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperAdmin - Trisport</title>
+    <title>SuperAdmin PRO - Trisport</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .btn-delete { background-color: #dc3545; padding: 5px 10px; font-size: 12px; width: auto; margin-left: 10px; }
+        .btn-delete:hover { background-color: #a71d2a; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; background: white; margin-bottom: 5px; border-radius: 4px; }
+        .tournament-tag { font-weight: bold; color: #0056b3; }
+    </style>
 </head>
 <body>
     <div id="admin-login" class="container">
         <h1>Accesso Riservato</h1>
-        <input type="password" id="admin-pass" placeholder="Password Admin (Colorare23,)">
+        <input type="password" id="admin-pass" placeholder="Password Admin" autocomplete="new-password">
         <button onclick="checkAdminLogin()">Entra</button>
     </div>
 
-    <div id="admin-dashboard" class="container hidden">
-        <h1>Centrale Operativa</h1>
+    <div id="admin-dashboard" class="container hidden" style="max-width: 900px;">
+        <h1>Centrale Operativa PRO</h1>
         <div class="tab-menu">
-            <button onclick="showTab('tab-classifica')" class="active">Classifiche</button>
-            <button onclick="showTab('tab-risultati')">Risultati</button>
+            <button onclick="showTab('tab-tornei')">Tornei</button>
             <button onclick="showTab('tab-squadre')">Squadre</button>
             <button onclick="showTab('tab-calendario')">Calendario</button>
+            <button onclick="showTab('tab-risultati')">Risultati</button>
             <button onclick="showTab('tab-arbitri')">Arbitri</button>
+            <button onclick="showTab('tab-classifica')" class="active">Classifica Live</button>
         </div>
 
-        <div id="tab-classifica" class="admin-section" style="display: block;">
-            <h3>Classifiche</h3>
-            <select id="filter-torneo" onchange="calcolaClassifica()">
-                <option value="Senior">Torneo Senior</option>
-                <option value="Junior">Torneo Junior</option>
-            </select>
-            <div id="classifica-container"></div>
+        <div id="tab-tornei" class="admin-section">
+            <div class="match-card">
+                <h3>Crea Nuovo Torneo</h3>
+                <input type="text" id="new-tournament-name" placeholder="Es. Torneo Open 2026">
+                <button onclick="aggiungiTorneo()">Crea Torneo</button>
+                <h4>Tornei Attivi:</h4>
+                <div id="lista-tornei"></div>
+            </div>
+        </div>
+
+        <div id="tab-squadre" class="admin-section">
+            <div class="match-card">
+                <h3>Aggiungi Squadra</h3>
+                <input type="text" id="new-team-name" placeholder="Nome Squadra">
+                <label>Associa a Torneo:</label>
+                <select id="new-team-torneo" class="select-tornei-dinamica"></select>
+                <label>Girone:</label>
+                <select id="new-team-group">
+                    <option value="Girone Unico">Girone Unico</option>
+                    <option value="Girone A">Girone A</option>
+                    <option value="Girone B">Girone B</option>
+                </select>
+                <button onclick="aggiungiSquadra()">Salva Squadra</button>
+                <h4>Gestione Squadre:</h4>
+                <div id="teams-list-pro"></div>
+            </div>
+        </div>
+
+        <div id="tab-calendario" class="admin-section">
+            <div class="match-card">
+                <h3>Programma Sfida</h3>
+                <label>Seleziona Torneo:</label>
+                <select id="match-torneo" class="select-tornei-dinamica" onchange="filtraSquadreCalendario()"></select>
+                <input type="date" id="match-date">
+                <select id="select-team-a"></select>
+                <select id="select-team-b"></select>
+                <button onclick="creaAccoppiamento()">Crea Sfida</button>
+                <h4>Calendario Programmato:</h4>
+                <div id="lista-calendario-pro"></div>
+            </div>
         </div>
 
         <div id="tab-risultati" class="admin-section">
-            <h3>Tutti i Punteggi</h3>
-            <div id="lista-risultati" style="overflow-x: auto;"></div>
+            <h3>Storico Gare e Correzioni</h3>
+            <div id="lista-risultati-pro" style="overflow-x: auto;"></div>
         </div>
 
-        <div id="tab-squadre" class="admin-section match-card">
-            <h3>Aggiungi Squadra</h3>
-            <input type="text" id="new-team-name" placeholder="Nome Squadra">
-            <select id="new-team-torneo"><option value="Senior">Torneo Senior</option><option value="Junior">Torneo Junior</option></select>
-            <select id="new-team-group"><option value="Girone Unico">Girone Unico</option><option value="Girone A">Girone A</option><option value="Girone B">Girone B</option></select>
-            <button onclick="aggiungiSquadra()">Salva Squadra</button>
-            <h4>Squadre Iscritte:</h4>
-            <ul id="teams-list" style="text-align: left; font-size: 14px;"></ul>
+        <div id="tab-arbitri" class="admin-section">
+            <div class="match-card">
+                <h3>Nuovo Arbitro</h3>
+                <input type="text" id="ref-name" placeholder="Nome">
+                <input type="text" id="ref-code" placeholder="Codice Segreto">
+                <select id="ref-sport">
+                    <option value="calcio">Calcio</option>
+                    <option value="pallavolo">Pallavolo</option>
+                    <option value="basket">Basket</option>
+                    <option value="jolly">Jolly</option>
+                </select>
+                <button onclick="aggiungiArbitro()">Salva Arbitro</button>
+                <h4>Arbitri Abilitati:</h4>
+                <div id="lista-arbitri-pro"></div>
+            </div>
         </div>
 
-        <div id="tab-calendario" class="admin-section match-card">
-            <h3>Crea Sfida Serata</h3>
-            <select id="match-torneo" onchange="filtraSquadreCalendario()"><option value="Senior">Torneo Senior</option><option value="Junior">Torneo Junior</option></select>
-            <input type="date" id="match-date">
-            <select id="select-team-a"><option>Scegli Torneo prima</option></select>
-            <select id="select-team-b"><option>Scegli Torneo prima</option></select>
-            <button onclick="creaAccoppiamento()">Crea Accoppiamento</button>
-        </div>
-
-        <div id="tab-arbitri" class="admin-section match-card">
-            <h3>Crea Arbitro</h3>
-            <input type="text" id="ref-name" placeholder="Nome Arbitro">
-            <input type="text" id="ref-code" placeholder="Codice Segreto Es. MARIO-123">
-            <select id="ref-sport"><option value="calcio">Calcio</option><option value="pallavolo">Pallavolo</option><option value="basket">Basket</option><option value="jolly">Jolly</option></select>
-            <button onclick="aggiungiArbitro()">Salva Arbitro</button>
+        <div id="tab-classifica" class="admin-section" style="display: block;">
+            <h3>Anteprima Classifica</h3>
+            <select id="filter-torneo" class="select-tornei-dinamica" onchange="calcolaClassifica()"></select>
+            <div id="classifica-container"></div>
         </div>
     </div>
+
     <script type="module" src="admin.js"></script>
 </body>
 </html>

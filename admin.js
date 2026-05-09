@@ -210,3 +210,48 @@ window.calcolaClassifica = async function() {
     listaOrdinata.forEach(s => html += `<tr><td>${s.nome}</td><td>${s.girone}</td><td><strong>${s.punti}</strong></td></tr>`);
     container.innerHTML = html + `</table>`;
 }
+// Aggiungi 'tab-gironi' alla funzione showTab
+if(tabId === 'tab-gironi') caricaGironi();
+
+// --- GESTIONE GIRONI ---
+window.aggiungiGirone = async function() {
+    const torneo = document.getElementById('new-group-tournament').value;
+    const nome = document.getElementById('new-group-name').value;
+    if(!torneo || !nome) return alert("Seleziona un torneo e scrivi il nome del girone!");
+    
+    try {
+        await addDoc(collection(db, "gironi"), { torneo, nome });
+        alert("Girone creato!");
+        document.getElementById('new-group-name').value = "";
+        caricaGironi();
+    } catch (e) { alert("Errore nel salvataggio del girone."); }
+}
+
+async function caricaGironi() {
+    const snap = await getDocs(collection(db, "gironi"));
+    const container = document.getElementById('lista-gironi');
+    container.innerHTML = "";
+    snap.forEach(d => {
+        const g = d.data();
+        container.innerHTML += `<div class="item-row">
+            <span>[${g.torneo}] <strong>${g.nome}</strong></span>
+            <button class="btn-delete" onclick="eliminaDato('gironi', '${d.id}', caricaGironi)">Elimina</button>
+        </div>`;
+    });
+}
+
+// Funzione per aggiornare il menu a tendina dei gironi quando scegli un torneo nella creazione squadra
+window.caricaGironiPerSquadra = async function() {
+    const torneoScelto = document.getElementById('new-team-torneo').value;
+    const selGirone = document.getElementById('new-team-group');
+    selGirone.innerHTML = "<option value=''>Caricamento...</option>";
+    
+    const snap = await getDocs(collection(db, "gironi"));
+    let options = "<option value=''>Scegli Girone...</option>";
+    snap.forEach(d => {
+        if(d.data().torneo === torneoScelto) {
+            options += `<option value="${d.data().nome}">${d.data().nome}</option>`;
+        }
+    });
+    selGirone.innerHTML = options;
+}
